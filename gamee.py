@@ -45,6 +45,8 @@ def get_nama_from_init_data(init_data):
             data = user_data_dict['first_name']
         if 'last_name' in user_data_dict:
             data = data + " " + user_data_dict['last_name']
+        if 'username' in user_data_dict :
+            data = data + " " + f"({user_data_dict['username']})"
     return data
 # Fungsi untuk melakukan login menggunakan initData
 def login_with_initdata(init_data, token):
@@ -100,9 +102,12 @@ def process_initdata(init_data):
             
             if start_response.status_code == 200:
                 start_data = start_response.json()
+                print(f"Tiket : {start_data['user']['tickets']['count']}")
+                print(f"Usd : {start_data['user']['money']['usdCents']/100}$")
                 if 'error' in start_data:
                     reason = start_data['error']['data']['reason']
                     print(f"Start session error: {reason}")
+                    print(start_response.json())
                 else:
                     print('Start Mining')
 
@@ -111,15 +116,22 @@ def process_initdata(init_data):
                 
                 if prize_response.status_code == 200:
                     prize_data_list = prize_response.json()
-                    for prize_data in prize_data_list:
-                        if 'error' in prize_data:
-                            reason = prize_data['error']['data']['reason']
-                            print(f"Prize claim error: {reason}")
-                        else:
-                            print("Sukses Gacha")
-            
+                    if 'error' in prize_data_list:
+                        reason = prize_data_list["error"].get("message", "No error message provided")
+                        print(f"GetPrize Error message: {reason}")
+                    else:
+                        payload2 = {"jsonrpc": "2.0", "id": "dailyReward.buySpinUsingTickets", "method": "dailyReward.buySpinUsingTickets", "params": {}}
+                        response2 = requests.post(url, json=payload2, headers=headers)
+                        if response2.status_code == 200:
+                            response_json2 = response2.json()
+                            if "error" in response_json2:
+                                error_message = response_json2["error"].get("message", "No error message provided")
+                                print(f"BuySpin Error message: {error_message}")
+                            else:
+                                print("Spin bought successfully.")
+                            
                 else:
-                    print("Failed to retrieve prizes.")
+                     print("Failed to retrieve prizes.")
 
             else:
                 print(f"Failed to start session. Error: {start_response.text}")
