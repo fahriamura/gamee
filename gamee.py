@@ -107,7 +107,6 @@ def process_initdata(init_data):
                 if 'error' in start_data:
                     reason = start_data['error']['data']['reason']
                     print(f"Start session error: {reason}")
-                    print(start_response.json())
                 else:
                     print('Start Mining')
 
