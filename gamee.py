@@ -2,7 +2,7 @@ import requests
 import urllib.parse
 import json
 import time
-
+import subprocess
 # URL dan headers
 url = "https://api.service.gameeapp.com/"
 headers = {
@@ -138,6 +138,7 @@ def process_initdata(init_data):
             print(f"Failed to login. Error: {login_response.text}")
     else:
         print(f"Failed to get user id from initData: {init_data}")
+        process_initdata(init_data)
 
 # Main program
 def main():
@@ -154,4 +155,7 @@ def main():
         time.sleep(0)  # Delay 60 detik sebelum membaca kembali file initData
 
 if __name__ == "__main__":
-    main()
+    try: 
+        main()
+    except Exception as e:
+        subprocess.run(["python3"],["gamee.py"])
