@@ -73,7 +73,7 @@ def start_session():
         "jsonrpc": "2.0",
         "id": "miningEvent.startSession",
         "method": "miningEvent.startSession",
-        "params": {"miningEventId": 5}
+        "params": {"miningEventId": 6}
     }
     response = requests.post(url, json=payload, headers=headers)
     return response
@@ -121,13 +121,13 @@ def process_initdata(init_data):
                     else:
                         payload2 = {"jsonrpc": "2.0", "id": "dailyReward.buySpinUsingTickets", "method": "dailyReward.buySpinUsingTickets", "params": {}}
                         response2 = requests.post(url, json=payload2, headers=headers)
-                        if response2.status_code == 200:
-                            response_json2 = response2.json()
-                            if "error" in response_json2:
-                                error_message = response_json2["error"].get("message", "No error message provided")
-                                print(f"BuySpin Error message: {error_message}")
-                            else:
-                                print("Spin bought successfully.")
+                       # if response2.status_code == 200:
+                        #    response_json2 = response2.json()
+                         #   if "error" in response_json2:
+                          #      error_message = response_json2["error"].get("message", "No error message provided")
+                           #     print(f"BuySpin Error message: {error_message}")
+                           # else:
+                            #    print("Spin bought successfully.")
                             
                 else:
                      print("Failed to retrieve prizes.")
