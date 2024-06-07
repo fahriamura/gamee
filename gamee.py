@@ -158,4 +158,4 @@ if __name__ == "__main__":
     try: 
         main()
     except Exception as e:
-        subprocess.run(["python3"],["gamee.py"])
+        subprocess.run(["python3", "gamee.py"], check=True)
