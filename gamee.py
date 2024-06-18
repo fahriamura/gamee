@@ -58,8 +58,7 @@ def login_with_initdata(init_data, token):
         "id": f"{token}",
         "method": "user.authentication.loginUsingTelegram",
         "params": {
-            "initData": "user=%7B%22id%22%3A765551722%2C%22first_name%22%3A%22Amura%22%2C%22last_name%22%3A%22Fachry%20%24MEH%20%24CFI%22%2C%22username%22%3A%22absol225%22%2C%22language_code%22%3A%22id%22%2C%22allows_write_to_pm%22%3Atrue%7D&chat_instance=-3501296207680078073&chat_type=sender&start_param=6&auth_date=1716996283&hash=7252a79acd7888aef8ebd92410b293a1a884dff8cd3406d8128f4e86c88b8d02"
-        }
+            "initData": init_data        }
     }
     response = requests.post(url, json=payload, headers=headers)
     if response.status_code == 200:
