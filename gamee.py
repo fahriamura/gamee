@@ -102,7 +102,6 @@ def process_initdata(init_data):
             
             # Start session
             start_response = start_session()
-            print(start_response.text)
             if start_response.status_code == 200:
                 start_data = start_response.json()
                 print(f"Tiket : {start_data['user']['tickets']['count']}")
@@ -158,11 +157,12 @@ def main():
         for thread in threads:
             thread.join()
         
-        # Delay sebelum membaca ulang file initData
-        time.sleep(0)  # Delay 60 detik sebelum membaca kembali file initData
+        time.sleep(10)
 
 if __name__ == "__main__":
     try: 
         main()
+    except KeyboardInterrupt:
+        print("\nProgram dihentikan oleh pengguna.")
     except Exception as e:
-        subprocess.run(["py","gamee.py"])
+        subprocess.run(["python3","gamee.py"])
