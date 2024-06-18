@@ -3,6 +3,8 @@ import urllib.parse
 import json
 import time
 import subprocess
+import threading
+
 # URL dan headers
 url = "https://api.service.gameeapp.com/"
 headers = {
@@ -45,9 +47,10 @@ def get_nama_from_init_data(init_data):
             data = user_data_dict['first_name']
         if 'last_name' in user_data_dict:
             data = data + " " + user_data_dict['last_name']
-        if 'username' in user_data_dict :
+        if 'username' in user_data_dict:
             data = data + " " + f"({user_data_dict['username']})"
     return data
+
 # Fungsi untuk melakukan login menggunakan initData
 def login_with_initdata(init_data, token):
     payload = {
@@ -73,7 +76,7 @@ def start_session():
         "jsonrpc": "2.0",
         "id": "miningEvent.startSession",
         "method": "miningEvent.startSession",
-        "params": {"miningEventId": 6}
+        "params": {"miningEventId": 7}
     }
     response = requests.post(url, json=payload, headers=headers)
     return response
@@ -99,7 +102,7 @@ def process_initdata(init_data):
             
             # Start session
             start_response = start_session()
-            
+            print(start_response.text)
             if start_response.status_code == 200:
                 start_data = start_response.json()
                 print(f"Tiket : {start_data['user']['tickets']['count']}")
@@ -138,7 +141,6 @@ def process_initdata(init_data):
             print(f"Failed to login. Error: {login_response.text}")
     else:
         print(f"Failed to get user id from initData: {init_data}")
-        process_initdata(init_data)
 
 # Main program
 def main():
@@ -147,9 +149,14 @@ def main():
     while True:
         initdata_list = read_initdata_from_file(initdata_file)
         
+        threads = []
         for init_data in initdata_list:
-            process_initdata(init_data.strip())
-            print("\n")
+            thread = threading.Thread(target=process_initdata, args=(init_data.strip(),))
+            threads.append(thread)
+            thread.start()
+        
+        for thread in threads:
+            thread.join()
         
         # Delay sebelum membaca ulang file initData
         time.sleep(0)  # Delay 60 detik sebelum membaca kembali file initData
